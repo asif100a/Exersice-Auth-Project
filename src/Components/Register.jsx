@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
 
 const Register = () => {
-    const authInfo = useContext(AuthContext);
-    console.log(authInfo);
+    const {registerWithEmailAndPassword} = useContext(AuthContext);
+
+    const [success, setSuccess] = useState("");
+    const [error, setError] = useState("");
     
     const handleRegister = (e) => {
         e.preventDefault();
@@ -12,7 +14,20 @@ const Register = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        console.log(name, email, password);
+        setSuccess('');
+        setError('');
+       
+        registerWithEmailAndPassword(email, password)
+            .then(res => {
+                console.log(res.user);
+                setSuccess('You have registered successfully.');
+            })
+            .catch(err => {
+                console.error(err.message);
+                if(err.message === "Firebase: Error (auth/email-already-in-use).") {
+                    setError("You have already registered.");
+                }
+            })
     };
     return (
         <div className="w-full h-full flex justify-center items-center">
@@ -30,8 +45,14 @@ const Register = () => {
                     <div className="space-y-1 text-sm">
                         <label htmlFor="password" className="block dark:text-gray-600">Password</label>
                         <input type="password" name="password" id="password" placeholder="Password" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600 border" required />
-
                     </div>
+                    
+                    {
+                        success && <p className="text-green-600">{success}</p>
+                    }
+                    {
+                        error && <p className="text-red-500">{error}</p>
+                    }
 
                     <div className="flex justify-center items-center">
                         <button href="#_" className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">

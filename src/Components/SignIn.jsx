@@ -1,14 +1,34 @@
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "./AuthProvider";
 
 const SignIn = () => {
     const express = "Don't have an account yet?";
+
+    const {loginWithEmailAndPassword} = useContext(AuthContext);
+
+    const [success, setSuccess] = useState('');
+    const [error, setError] = useState('');
 
     const handleSignIn = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        console.log(email, password);
+        setSuccess('');
+        setError('');
+
+        loginWithEmailAndPassword(email, password)
+            .then(res => {
+                console.log(res.user);
+                setSuccess('You have signed in successfully.');
+            })
+            .catch(err => {
+                console.error(err.message);
+                if(err.message === "Firebase: Error (auth/invalid-credential).") {
+                    setError('You have applied wrong email or password.');
+                }
+            })
     };
 
     return (
@@ -34,6 +54,12 @@ const SignIn = () => {
                                 <a rel="noopener noreferrer" href="#" className="text-xs hover:underline dark:text-gray-600">Forgot password?</a>
                             </div>
                         </div>
+                        {
+                            success && <p className="text-green-600">{success}</p>
+                        }
+                        {
+                            error && <p className="text-red-500">{error}</p>
+                        }
                     </div>
                     <div className="space-y-2">
                         <div className="flex justify-center items-center">
