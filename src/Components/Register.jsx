@@ -16,6 +16,23 @@ const Register = () => {
 
         setSuccess('');
         setError('');
+
+        if(password.length < 8) {
+            setError('You should provide at least 8 characters of password.');
+            return;
+        }
+        else if(!/[A-Z]/.test(password)) {
+            setError('You should provide at least 1 character of Uppercase.');
+            return;
+        }
+        else if(!/[a-z]/.test(password)) {
+            setError("You should provide at least 1 character of Lowercase.");
+            return;
+        }
+        else if(!/[!@#$%^&*]/.test(password)) {
+            setError("You should provide at least 1 character of special sign(!@#$%^&*).");
+            return;
+        }
        
         registerWithEmailAndPassword(email, password)
             .then(res => {
