@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthProvider";
 const SignIn = () => {
     const express = "Don't have an account yet?";
 
-    const {loginWithEmailAndPassword, googleSignIn} = useContext(AuthContext);
+    const {loginWithEmailAndPassword, googleSignIn, setUser} = useContext(AuthContext);
 
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const SignIn = () => {
 
         loginWithEmailAndPassword(email, password)
             .then(res => {
-                console.log(res.user);
+                setUser(res.user)
                 setSuccess('You have signed in successfully.');
             })
             .catch(err => {
@@ -34,7 +34,7 @@ const SignIn = () => {
     const handleGoogleSignIn = () => {
         googleSignIn()
             .then(res => {
-                console.log(res);
+                setUser(res.user)
                 setSuccess('You have signed in successfully.');
             }) 
             .catch(err => {

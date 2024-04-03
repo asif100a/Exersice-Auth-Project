@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import PropTypes from 'prop-types';
 import {
     GoogleAuthProvider,
@@ -12,6 +12,9 @@ import auth from "../firebase/firebase.config";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
+
+    const [user, setUser] = useState(null);
+    console.log(user);
 
     const googleProvider = new GoogleAuthProvider();
 
@@ -42,6 +45,8 @@ const AuthProvider = ({ children }) => {
         loginWithEmailAndPassword,
         signOutAccount,
         googleSignIn,
+        setUser,
+        user,
     };
 
     return (
